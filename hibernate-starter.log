@@ -1,2 +1,2 @@
-[2022-10-13 17:21:30,012] INFO [org.hibernate.engine.transaction.jta.platform.internal.JtaPlatformInitiator: 52] HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
-[2022-10-13 17:21:30,108] INFO [org.hibernate.orm.connections.pooling: 502] HHH10001008: Cleaning up connection pool [jdbc:postgresql://localhost:5434/hibernate_starter]
+[2022-10-13 17:42:23,033] INFO [org.hibernate.engine.transaction.jta.platform.internal.JtaPlatformInitiator: 52] HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+[2022-10-13 17:42:23,131] INFO [org.hibernate.orm.connections.pooling: 502] HHH10001008: Cleaning up connection pool [jdbc:postgresql://localhost:5434/hibernate_starter]
