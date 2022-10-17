@@ -23,6 +23,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import java.util.ArrayList;
@@ -31,7 +32,7 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString(exclude = {"company", "profile", "chats"})
+@ToString(exclude = {"company", "profile", "userChats"})
 @Builder
 @Table(schema = "hibernate_example", name = "users")
 @Entity
@@ -62,10 +63,6 @@ public class User {
     private Profile profile;
 
     @Builder.Default
-    @ManyToMany
-    @JoinTable(schema = "hibernate_example", name = "users_chat",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "chat_id"))
-    private List<Chat> chats = new ArrayList<>();
-
+    @OneToMany(mappedBy = "user")
+    private List<UserChat> userChats = new ArrayList<>();
 }

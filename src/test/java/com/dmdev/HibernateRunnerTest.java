@@ -3,10 +3,12 @@ package com.dmdev;
 import com.dmdev.entity.Birthday;
 import com.dmdev.entity.Chat;
 import com.dmdev.entity.Company;
+import com.dmdev.entity.LocaleInfo;
 import com.dmdev.entity.PersonalInfo;
 import com.dmdev.entity.Profile;
 import com.dmdev.entity.Role;
 import com.dmdev.entity.User;
+import com.dmdev.entity.UserChat;
 import com.dmdev.util.HibernateUtil;
 import lombok.Cleanup;
 import org.hibernate.Session;
@@ -19,6 +21,7 @@ import java.lang.reflect.Field;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.time.Instant;
 import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.Optional;
@@ -29,35 +32,41 @@ import static java.util.stream.Collectors.*;
 class HibernateRunnerTest {
 
     @Test
+    void localeInfo() {
+        try (SessionFactory sessionFactory = HibernateUtil.buildSessionFactory();
+             Session session = sessionFactory.openSession()) {
+            session.beginTransaction();
+
+            Company company = session.get(Company.class, 3);
+//            company.getLocales().add(LocaleInfo.builder()
+//                    .lang("en")
+//                    .description("english")
+//                    .build());
+
+            System.out.println(company.getUsers());
+
+            session.getTransaction().commit();
+        }
+
+    }
+
+    @Test
     void checkManyToMany() {
         try (SessionFactory sessionFactory = HibernateUtil.buildSessionFactory();
              Session session = sessionFactory.openSession()) {
 
             session.beginTransaction();
+            User user = session.get(User.class, 5L);
+            Chat chat = session.get(Chat.class, 1L);
 
-            User user = User.builder()
-                    .userName("Elena@gmail.com")
-                    .personalInfo(PersonalInfo.builder()
-                            .firstName("Elena")
-                            .lastName("Markova")
-                            .birthDate(new Birthday(LocalDate.of(2001, 12, 14)))
-                            .build())
-                    .role(Role.USER)
-                    .info("""
-                            {
-                            "name": "Elena",
-                            "age": 21
-                            }
-                            """)
+            UserChat userChat = UserChat.builder()
+                    .user(user)
+                    .chat(chat)
+                    .createdAt(Instant.now())
+                    .createdBy("Alex")
                     .build();
 
-            Chat chat = Chat.builder()
-                    .name("Telegram")
-                    .build();
-
-            session.save(user);
-            session.save(chat);
-
+            session.save(userChat);
 
             session.getTransaction().commit();
         }

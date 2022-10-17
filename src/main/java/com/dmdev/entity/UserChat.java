@@ -1,52 +1,61 @@
 package com.dmdev.entity;
 
-import com.vladmihalcea.hibernate.type.json.JsonBinaryType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
-import org.hibernate.annotations.Type;
-import org.hibernate.annotations.TypeDef;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
-import javax.persistence.Embedded;
 import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import java.time.Instant;
+import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString(exclude = "userChats")
-@EqualsAndHashCode(of = "name")
 @Builder
-@Table(schema = "hibernate_example", name = "chat")
+@Table(schema = "hibernate_example", name = "users_chat")
 @Entity
-public class Chat {
+public class UserChat {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, unique = true)
-    private String name;
+    @ManyToOne
+    private User user;
 
-    @Builder.Default
-    @OneToMany(mappedBy = "chat")
-    private List<UserChat> userChats = new ArrayList<>();
+    @ManyToOne
+    @JoinColumn(name = "chat_id")
+    private Chat chat;
+
+    @Column(name = "created_at")
+    private Instant createdAt;
+
+    @Column(name = "created_by")
+    private String createdBy;
+
+    public void setUser(User user) {
+        this.user = user;
+        this.user.getUserChats().add(this);
+    }
+
+    public void setChat(Chat chat) {
+        this.chat = chat;
+        this.chat.getUserChats().add(this);
+    }
 }
